@@ -1,46 +1,34 @@
 import functools
 import operator
+import itertools
 
-def move (a, b):
-    x = a[0]
-    y = a[1]
-    direction = b[0]
-    delta = b[1]
+# def add (a):
+#     print (a[0], a[1])
+#     return a[0] + a[1]
 
-    if (direction == "forward"):
-        x += delta
-    if (direction == "down"):
-        y += delta
-    if (direction == "up"):
-        y -= delta
+def commonBit (a, b):
+    ys = itertools.zip_longest(a,  [x if x else -1 for x in b], fillvalue = 0)
+    # print ('ys', list(ys))
+    xs = map(lambda x: x[0] + x[1], ys)
+    return xs
 
-    return (x, y)
+def isBinaryDigit (a):
+    return a == '1' or a == '0'
 
-def aimMove (a, b):
-    x = a[0]
-    y = a[1]
-    aim = a[2]
-    direction = b[0]
-    delta = b[1]
-
-    if (direction == "forward"):
-        x += delta
-        y += aim * delta
-    if (direction == "down"):
-        aim += delta
-    if (direction == "up"):
-        aim -= delta
-
-    return (x, y, aim)
-
-def tupleProduct (a):
-    return a[0] * a[1]
+def convertListToInt (a):
+    # print (list(map(lambda x: int(x > 0), a)))
+    return int(''.join(map(str, a)), 2)
 
 if __name__ == "__main__":
-    f = open("day2.in", "r")
-    data = [(xs[0], int(xs[1])) for xs in [x.split(' ') for x in f.readlines()]]
-    # print(data)
+    f = open("day3.in", "r")
+    # f = open("test3.in", "r")
+    data = [list(map(int, filter(isBinaryDigit, x))) for x in f.readlines()]
+    bits = list(map(lambda x: int(x > 0), functools.reduce(commonBit, data, []))) # must make list here :(
+    # print (bits)
+    gamma = convertListToInt(bits)
+    # print (bin(gamma), 'list', bits)
+    epsilon = convertListToInt(map(lambda x: int(not bool(x)), bits))
+    # print(bin(epsilon))
     # part 1
-    print(tupleProduct(functools.reduce(move, data, (0,0))))
+    print (gamma * epsilon)
     # part 2
-    print(tupleProduct(functools.reduce(aimMove, data, (0,0,0))))
