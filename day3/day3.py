@@ -24,9 +24,9 @@ def cull (xss, index, invert=False) -> int:
     if (invert):
         f = lambda x: x < 0
 
-    ys = list(functools.reduce(commonBit, xss, []))
+    # ys = list(functools.reduce(commonBit, xss, []))
     # print (ys, 'ys[index]', ys[index], 'f(ys[index])', f(ys[index]))
-    bit = int(f(ys[index]))
+    bit = int(f(list(functools.reduce(commonBit, xss, []))[index]))
     yss = [xs for xs in xss if xs[index] == bit]
     # print (bit, yss)
     if len(yss) == 1:
