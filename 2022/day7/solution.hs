@@ -24,8 +24,10 @@ out fs = fs {hist=tail $ hist fs}
 up :: FileSystem -> FileSystem
 up fs = fs {hist=["/"]}
 
+path xs = foldl (\ a b -> a ++ "/" ++ b) "" xs
+
 into :: FileSystem -> String -> FileSystem
-into fs dir = fs {hist=dir:hist fs}
+into fs dir = fs {hist=(dir ++ path (hist fs)):hist fs}
 
 cmd :: FileSystem -> [String]
 cmd fs = head $ cmds fs
@@ -90,7 +92,11 @@ execute fs
 
 part1 fs = sum $ filter (< 100000) (map (snd . snd) (Data.Map.toList (dirs fs)))
 
-part2 xs = xs
+
+gettRootSize :: FileSystem -> Integer
+gettRootSize fs = snd (defaultEntry (Data.Map.lookup "/" (dirs fs)))
+part2 :: FileSystem -> Integer
+part2 fs = foldl min (gettRootSize fs) $ filter (>= (gettRootSize fs - 40000000)) (map (snd . snd) (Data.Map.toList (dirs fs)))
 
 -- 1036344 too low
 
@@ -103,7 +109,8 @@ main = do
     let fs = execute $ newFileSystem (map words $ lines contents)
     print "part 1"
     putStrLn $ outputDirs (Data.Map.toList (dirs fs))
-    print $ filter (< 100000) (map (snd . snd) (Data.Map.toList (dirs fs)))
+    print $ filter (> (70000000 - gettRootSize fs)) (map (snd . snd) (Data.Map.toList (dirs fs)))
+    print $ gettRootSize fs
     print $ part1 fs
-    -- print $ part2 contents
+    print $ part2 fs
     hClose handle   
