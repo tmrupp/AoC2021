@@ -1,4 +1,4 @@
 
-*/solution.o
-*/solution
-*/solution.hi
+*.o
+*solution
+*.hi
