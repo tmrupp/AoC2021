@@ -2,7 +2,6 @@ import System.IO
 import Data.List
 import Data.Char
 import Data.Bifoldable (bifind)
-import Control.Monad.RWS (All(getAll))
 
 -- removes duplicates
 rmdups :: (Ord a) => [a] -> [a]
